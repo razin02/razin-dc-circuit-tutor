@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Edit Result{% endblock %}
+
+{% block content %}
+<section class="form-card card">
+    <p class="eyebrow">LECTURER MANAGEMENT</p>
+    <h1>Edit Student Result</h1>
+
+    <form method="post" class="form-grid">
+        <label>
+            Student Name
+            <input name="name" value="{{ result.name }}" required>
+        </label>
+
+        <label>
+            Total Questions
+            <input
+                name="total"
+                type="number"
+                min="1"
+                value="{{ result.total }}"
+                required
+            >
+        </label>
+
+        <label>
+            Correct Answers
+            <input
+                name="correct"
+                type="number"
+                min="0"
+                value="{{ result.correct }}"
+                required
+            >
+        </label>
+
+        <label>
+            Score
+            <input
+                name="score"
+                type="number"
+                min="0"
+                value="{{ result.score }}"
+                required
+            >
+        </label>
+
+        <label>
+            Completion Time (seconds)
+            <input
+                name="time_seconds"
+                type="number"
+                min="0"
+                step="0.01"
+                value="{{ result.time_seconds }}"
+                required
+            >
+        </label>
+
+        <div class="form-actions">
+            <button class="button primary" type="submit">Save Changes</button>
+            <a class="button" href="{{ url_for('lecturer_dashboard') }}">Cancel</a>
+        </div>
+    </form>
+
+    <p class="small-note">
+        Percentage, grade and leaderboard rank are recalculated automatically.
+    </p>
+</section>
+{% endblock %}

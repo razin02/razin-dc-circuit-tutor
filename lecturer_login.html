@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Lecturer Login{% endblock %}
+
+{% block content %}
+<section class="form-card card narrow-card">
+    <p class="eyebrow">LECTURER ACCESS</p>
+    <h1>Enter Lecturer PIN</h1>
+
+    <form method="post" class="stacked-form">
+        <label for="pin">PIN</label>
+        <input
+            id="pin"
+            name="pin"
+            type="password"
+            inputmode="numeric"
+            required
+            autofocus
+        >
+
+        <button class="button primary" type="submit">
+            Open Lecturer Dashboard
+        </button>
+    </form>
+
+    <p class="small-note">Default demonstration PIN: 1234</p>
+</section>
+{% endblock %}

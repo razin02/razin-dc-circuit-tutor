@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block title %}{{ meta.title }}{% endblock %}
+
+{% block content %}
+<section class="module-header card" style="--topic-accent: {{ meta.accent }}">
+    <div>
+        <p class="eyebrow">{{ meta.short }} MODULE</p>
+        <h1>{{ module.name }}</h1>
+        <p>{{ module.description }}</p>
+    </div>
+
+    <form method="post" action="{{ url_for('start_practice', topic=topic) }}" class="practice-launcher">
+        <label for="practice-difficulty">Practice Difficulty</label>
+        <select id="practice-difficulty" name="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+        <button class="button primary" type="submit">
+            Start 5–8 Practice Questions
+        </button>
+    </form>
+</section>
+
+<section class="card lecture-summary-card">
+    <div class="section-heading-row">
+        <div>
+            <p class="eyebrow">LECTURE NOTES + TEXTBOOK SUPPORT</p>
+            <h2>{{ meta.title }} Learning Map</h2>
+            <p class="section-introduction">
+                Start with the core equations, understand what each term means,
+                then follow the problem-solving ideas below.
+            </p>
+        </div>
+
+        {% if slide_available %}
+            <a
+                class="button"
+                target="_blank"
+                href="{{ url_for('resource_file', kind='slide', filename=slide_filename) }}"
+            >
+                Open Full Lecture PDF ↗
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="formula-showcase">
+        <div class="formula-showcase-heading">
+            <span class="formula-symbol">∑</span>
+            <div>
+                <span class="formula-kicker">FORMULA FOCUS</span>
+                <h3>Equations you should recognise immediately</h3>
+            </div>
+        </div>
+
+        <div class="formula-card-grid">
+            {% for item in formula_cards %}
+                <article class="formula-card">
+                    <span class="formula-label">{{ item.label }}</span>
+                    <div class="formula-expression">{{ item.formula }}</div>
+                    <p>{{ item.meaning }}</p>
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="lecture-note-grid">
+        {% for note in lecture_notes %}
+            <article class="lecture-note-item">
+                <span class="lecture-note-tag">{{ note.tag }}</span>
+                <h3>{{ note.title }}</h3>
+                <p>{{ note.body }}</p>
+                <div class="note-formula">{{ note.formula }}</div>
+                <div class="note-takeaway">
+                    <strong>Remember:</strong> {{ note.takeaway }}
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+
+    <div class="study-tip-grid">
+        {% for tip in study_tips %}
+            <article class="study-tip">
+                <span>{{ tip.label }}</span>
+                <p>{{ tip.text }}</p>
+            </article>
+        {% endfor %}
+    </div>
+
+    {% if slide_available %}
+        <details class="lecture-pdf-disclosure">
+            <summary>View the original lecture slides inside this page</summary>
+            <div class="lecture-pdf-shell">
+                <iframe
+                    title="{{ meta.title }} lecture notes"
+                    src="{{ url_for('resource_file', kind='slide', filename=slide_filename) }}#view=FitH"
+                ></iframe>
+            </div>
+        </details>
+    {% else %}
+        <div class="lecture-resource-note">
+            These structured notes combine the key lecture concepts with
+            textbook-style explanations, formula checks and common exam mistakes.
+        </div>
+    {% endif %}
+</section>
+
+<div class="lesson-layout">
+    <aside class="lesson-sidebar card">
+        <h3>Lesson Sections</h3>
+        {% for item in module.lessons %}
+            <a
+                class="{% if loop.index0 == lesson_index %}active{% endif %}"
+                href="{{ url_for('learning_topic', topic=topic, lesson=loop.index0) }}"
+            >
+                {{ loop.index }}. {{ item.title }}
+            </a>
+        {% endfor %}
+    </aside>
+
+    <section class="lesson-content">
+        <article class="card">
+            <p class="eyebrow">LESSON {{ lesson_index + 1 }}</p>
+            <h2>{{ lesson.title }}</h2>
+
+            <div class="slide-stack">
+                {% for slide in lesson.theory_slides %}
+                    <section class="theory-slide">
+                        {{ slide|markdown }}
+                    </section>
+                {% endfor %}
+            </div>
+        </article>
+
+        {% if lesson.example %}
+            <article class="card worked-example">
+                <p class="eyebrow">WORKED EXAMPLE</p>
+                <h2>{{ lesson.example.title }}</h2>
+                <p>{{ lesson.example.description }}</p>
+
+                {% if lesson.example.get('circuit_def') %}
+                    {% set problem = {"circuit_def": lesson.example.get("circuit_def", {})} %}
+                    {% include "circuit_diagram.html" %}
+                {% elif topic in ["mesh", "nodal"] and lesson_index > 0 %}
+                    {% set example_topic = topic %}
+                    {% include "example_diagram.html" %}
+                {% endif %}
+
+                <ol class="solution-steps">
+                    {% for step in lesson.example.solution_steps %}
+                        <li>{{ step }}</li>
+                    {% endfor %}
+                </ol>
+            </article>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

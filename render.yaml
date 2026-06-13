@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: razin-dc-circuit-tutor
+    runtime: python
+    plan: free
+    buildCommand: pip install -r web_app/requirements.txt
+    startCommand: gunicorn web_app.app:app
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: CIRCUIT_TUTOR_SECRET
+        generateValue: true
+      - key: CIRCUIT_TUTOR_LECTURER_PIN
+        sync: false

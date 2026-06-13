@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Start Competition{% endblock %}
+
+{% block content %}
+<section class="form-card card narrow-card">
+    <p class="eyebrow">STUDENT COMPETITION</p>
+    <h1>Start Competition</h1>
+    <p>
+        You will receive 10 mixed KVL, KCL, Mesh and Nodal questions.
+        Correct and faster answers earn more points.
+    </p>
+
+    <form method="post" class="stacked-form">
+        <label for="name">Student Name</label>
+        <input id="name" name="name" required autofocus>
+
+        <button class="button primary" type="submit">
+            Start Competition
+        </button>
+    </form>
+</section>
+{% endblock %}

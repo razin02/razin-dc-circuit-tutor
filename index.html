@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}DC Circuit Analysis Tutor{% endblock %}
+
+{% block content %}
+<section class="hero card">
+    <p class="eyebrow">COMPLETE WEB PLATFORM</p>
+    <h1>Virtual Tutor for DC Circuit Analysis</h1>
+    <p>
+        Learn circuit theory, practise generated and examination-style
+        questions, compete for leaderboard placement, build circuits
+        visually, and verify calculations.
+    </p>
+</section>
+
+<section class="mode-grid">
+    <a class="mode-card learning" href="{{ url_for('learning_index') }}">
+        <span class="mode-icon">📘</span>
+        <h2>Learning Modules</h2>
+        <p>Guided KVL, KCL, Mesh and Nodal lessons with worked examples.</p>
+    </a>
+
+    <a class="mode-card tutor" href="{{ url_for('tutor') }}">
+        <span class="mode-icon">🧠</span>
+        <h2>Tutor Mode</h2>
+        <p>Random circuit and examination-style questions with hints.</p>
+    </a>
+
+    <a class="mode-card competitive" href="{{ url_for('competitive_role') }}">
+        <span class="mode-icon">🏆</span>
+        <h2>Competitive Mode</h2>
+        <p>Student scoring, grades, speed bonuses and lecturer management.</p>
+    </a>
+
+    <a class="mode-card builder" href="{{ url_for('builder') }}">
+        <span class="mode-icon">🧩</span>
+        <h2>Visual Circuit Builder</h2>
+        <p>Drag components, edit values, draw the circuit and calculate it.</p>
+    </a>
+
+    <a class="mode-card helper" href="{{ url_for('helper') }}">
+        <span class="mode-icon">🛠️</span>
+        <h2>Helper Mode</h2>
+        <p>Quick series and parallel circuit calculations.</p>
+    </a>
+</section>
+{% endblock %}

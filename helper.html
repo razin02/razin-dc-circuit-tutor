@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Helper Mode{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+    <p class="eyebrow">SIMPLE CIRCUIT HELPER</p>
+    <h1>Series and Parallel Calculator</h1>
+    <p>Enter resistor values separated by commas.</p>
+</section>
+
+<section class="two-column">
+    <form method="post" class="card stacked-form">
+        <label for="topology">Topology</label>
+        <select id="topology" name="topology">
+            <option value="series">Series</option>
+            <option value="parallel">Parallel</option>
+        </select>
+
+        <label for="voltage">Source Voltage (V)</label>
+        <input id="voltage" name="voltage" type="number" step="any" required>
+
+        <label for="resistors">Resistors (Ω)</label>
+        <input
+            id="resistors"
+            name="resistors"
+            placeholder="Example: 10, 20, 30"
+            required
+        >
+
+        <button class="button primary" type="submit">Calculate Circuit</button>
+    </form>
+
+    <section class="card">
+        {% if error %}
+            <div class="feedback error">{{ error }}</div>
+        {% elif result %}
+            <h2>Calculation Result</h2>
+            <div class="result-grid compact">
+                <div>
+                    <span>Total Resistance</span>
+                    <strong>{{ "%.4f"|format(result.total_resistance) }} Ω</strong>
+                </div>
+                <div>
+                    <span>Total Current</span>
+                    <strong>{{ "%.4f"|format(result.total_current) }} A</strong>
+                </div>
+            </div>
+
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Branch</th>
+                            <th>Resistance</th>
+                            <th>Voltage</th>
+                            <th>Current</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for branch in result.branches %}
+                            <tr>
+                                <td>{{ branch.name }}</td>
+                                <td>{{ "%.4f"|format(branch.resistance) }} Ω</td>
+                                <td>{{ "%.4f"|format(branch.voltage) }} V</td>
+                                <td>{{ "%.4f"|format(branch.current) }} A</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                Enter the circuit values to display the solution here.
+            </div>
+        {% endif %}
+    </section>
+</section>
+{% endblock %}
