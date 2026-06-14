@@ -1114,7 +1114,7 @@ def practice(topic: str):
                 print("USER =", user_answer)
                 print("CORRECT =", correct_answer)
 
-                if abs(user_answer - correct_answer) < 0.1:
+                if round(user_answer, 2) == round(correct_answer, 2):
                     state["correct"] += 1
                     state["feedback"] = (
                         f"Correct. Answer: {correct_answer:.2f} "
