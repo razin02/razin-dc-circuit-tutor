@@ -1,4 +1,4 @@
-from __future__ import annotations
+    from __future__ import annotations
 
 import os
 import random
@@ -1109,6 +1109,10 @@ def practice(topic: str):
             try:
                 user_answer = float(raw_answer)
                 correct_answer = get_correct_answer(state["problem"])
+               
+                print("QUESTION =", state["problem"])
+                print("USER =", user_answer)
+                print("CORRECT =", correct_answer)
 
                 if abs(user_answer - correct_answer) < 0.1:
                     state["correct"] += 1
