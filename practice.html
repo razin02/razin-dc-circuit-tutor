@@ -28,12 +28,9 @@
     <form method="post" class="answer-form">
         <label for="answer">Answer</label>
         <div class="answer-row">
-            <input id="answer" name="answer" type="number" step="any" autocomplete="off"
-                {% if not state.answered %}autofocus{% endif %}
-                {% if state.answered %}disabled{% endif %}>
+            <input id="answer" name="answer" type="number" step="any" autocomplete="off" autofocus>
             <span class="unit">{{ problem.unit }}</span>
-            <button class="button primary" type="submit" name="action" value="check"
-                {% if state.answered %}disabled{% endif %}>
+            <button class="button primary" type="submit" name="action" value="check">
                 Check Answer
             </button>
         </div>
