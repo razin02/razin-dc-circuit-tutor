@@ -1110,21 +1110,18 @@ def practice(topic: str):
                     user_answer = float(raw_answer)
                     correct_answer = get_correct_answer(state["problem"])
 
-                    if abs(user_answer - correct_answer) < 0.1:
+                    if round(user_answer, 2) == round(correct_answer, 2):
                         state["correct"] += 1
                         state["feedback"] = (
                             f"Correct. Answer: {correct_answer:.2f} "
                             f"{state['problem'].get('unit', '')}"
                         )
                         state["feedback_type"] = "success"
+                        state["answered"] = True
                     else:
-                        state["feedback"] = (
-                            f"Incorrect. Correct answer: {correct_answer:.2f} "
-                            f"{state['problem'].get('unit', '')}"
-                        )
+                        state["feedback"] = "Incorrect. Try again."
                         state["feedback_type"] = "error"
-
-                    state["answered"] = True
+                        state["answered"] = False
 
                 except ValueError:
                     state["feedback"] = "Enter a valid numerical answer."
