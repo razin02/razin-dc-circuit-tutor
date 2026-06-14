@@ -1104,35 +1104,34 @@ def practice(topic: str):
             show_hint = True
 
         elif action == "check":
-            if not state.get("answered"):
-                raw_answer = request.form.get("answer", "").strip()
-                try:
-                    user_answer = float(raw_answer)
-                    correct_answer = get_correct_answer(state["problem"])
+            raw_answer = request.form.get("answer", "").strip()
 
-                    if abs(user_answer - correct_answer) < 0.1:
-                        state["correct"] += 1
-                        state["feedback"] = (
-                            f"Correct. Answer: {correct_answer:.2f} "
-                            f"{state['problem'].get('unit', '')}"
-                        )
-                        state["feedback_type"] = "success"
-                    else:
-                        state["feedback"] = (
-                            f"Incorrect. Correct answer: {correct_answer:.2f} "
-                            f"{state['problem'].get('unit', '')}"
-                        )
-                        state["feedback_type"] = "error"
+            try:
+                user_answer = float(raw_answer)
+                correct_answer = get_correct_answer(state["problem"])
 
+                if abs(user_answer - correct_answer) < 0.1:
+                    state["correct"] += 1
+                    state["feedback"] = (
+                        f"Correct. Answer: {correct_answer:.2f} "
+                        f"{state['problem'].get('unit', '')}"
+                    )
+                    state["feedback_type"] = "success"
                     state["answered"] = True
-
-                except ValueError:
-                    state["feedback"] = "Enter a valid numerical answer."
+                else:
+                    state["feedback"] = "Incorrect. Try again."
                     state["feedback_type"] = "error"
-                except Exception as error:
-                    state["feedback"] = f"Unable to check answer: {error}"
-                    state["feedback_type"] = "error"
+                    state["answered"] = False
 
+            except ValueError:
+                state["feedback"] = "Enter a valid numerical answer."
+                state["feedback_type"] = "error"
+                state["answered"] = False
+
+            except Exception as error:
+                state["feedback"] = f"Unable to check answer: {error}"
+                state["feedback_type"] = "error"
+                state["answered"] = False
         elif action == "next":
             if not state.get("answered"):
                 state["feedback"] = "Check your answer before moving on."
