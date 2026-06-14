@@ -1119,7 +1119,10 @@ def practice(topic: str):
                         state["feedback_type"] = "success"
                         state["answered"] = True
                     else:
-                        state["feedback"] = "Incorrect. Try again."
+                        state["feedback"] = (
+                            f"Incorrect. Correct answer: {correct_answer:.2f} "
+                            f"{state['problem'].get('unit', '')}"
+                        )
                         state["feedback_type"] = "error"
                         state["answered"] = False
 
