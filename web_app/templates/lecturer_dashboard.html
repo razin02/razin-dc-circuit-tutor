@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Lecturer Dashboard{% endblock %}
+
+{% block content %}
+<section class="toolbar card">
+    <div>
+        <p class="eyebrow">LECTURER MODE</p>
+        <h1>Leaderboard Management</h1>
+    </div>
+    <a class="button" href="{{ url_for('lecturer_logout') }}">Log Out</a>
+</section>
+
+<section class="card table-card">
+    <div class="table-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Grade</th>
+                    <th>Score</th>
+                    <th>Correct</th>
+                    <th>Percentage</th>
+                    <th>Time</th>
+                    <th>Management</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ result.name }}</td>
+                        <td>{{ result.grade }}</td>
+                        <td>{{ result.score }}</td>
+                        <td>{{ result.correct }}/{{ result.total }}</td>
+                        <td>{{ result.percentage }}%</td>
+                        <td>{{ result.time_seconds }} s</td>
+                        <td class="management-cell">
+                            <a
+                                class="button small-button"
+                                href="{{ url_for('lecturer_edit', result_id=result.id) }}"
+                            >
+                                Edit
+                            </a>
+
+                            <form
+                                method="post"
+                                action="{{ url_for('lecturer_delete', result_id=result.id) }}"
+                                onsubmit="return confirm('Delete this student result?')"
+                            >
+                                <button class="button danger small-button" type="submit">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="empty-cell">
+                            No competition results are available.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="card danger-zone">
+    <h2>Clear Entire Leaderboard</h2>
+    <p>
+        Re-enter the lecturer PIN before deleting every saved result.
+    </p>
+
+    <form
+        method="post"
+        action="{{ url_for('lecturer_clear') }}"
+        class="inline-form"
+        onsubmit="return confirm('Permanently delete every result?')"
+    >
+        <input
+            name="pin"
+            type="password"
+            placeholder="Re-enter PIN"
+            required
+        >
+        <button class="button danger" type="submit">
+            Clear All Results
+        </button>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Practice Result{% endblock %}
+
+{% block content %}
+<section class="result-card card">
+    <p class="eyebrow">{{ meta.short }} PRACTICE COMPLETE</p>
+    <h1>{{ result.percentage }}%</h1>
+    <p>
+        You answered {{ result.correct }} out of {{ result.total }}
+        questions correctly.
+    </p>
+
+    <div class="action-row centered">
+        <form
+            method="post"
+            action="{{ url_for('start_practice', topic=result.topic) }}"
+        >
+            <button class="button primary" type="submit">
+                Try Another Set
+            </button>
+        </form>
+
+        <a
+            class="button"
+            href="{{ url_for('learning_topic', topic=result.topic) }}"
+        >
+            Return to Module
+        </a>
+    </div>
+</section>
+{% endblock %}

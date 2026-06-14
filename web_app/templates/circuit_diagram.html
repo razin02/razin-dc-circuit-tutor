@@ -1,0 +1,255 @@
+{% set circuit = problem.get("circuit_def", {}) %}
+{% set topology = circuit.get("topology", "") %}
+{% set components = circuit.get("components", []) %}
+{% set values = circuit.get("values", {}) %}
+
+<div class="circuit-panel">
+    {% if topology == "series" %}
+        <svg viewBox="0 0 900 320" class="circuit-svg" role="img" aria-label="Series circuit">
+            <defs>
+                <marker id="series-arrow" markerWidth="6" markerHeight="6" refX="5.2" refY="3" orient="auto">
+                    <path d="M0,0 L6,3 L0,6 Z" class="arrow-head"></path>
+                </marker>
+            </defs>
+
+            <line x1="130" y1="70" x2="770" y2="70" class="wire"/>
+            <line x1="770" y1="70" x2="770" y2="250" class="wire"/>
+            <line x1="770" y1="250" x2="130" y2="250" class="wire"/>
+            <line x1="130" y1="250" x2="130" y2="190" class="wire"/>
+            <line x1="130" y1="130" x2="130" y2="70" class="wire"/>
+
+            <circle cx="130" cy="160" r="30" class="source"/>
+            <text x="130" y="153" text-anchor="middle" class="symbol-text">+</text>
+            <text x="130" y="176" text-anchor="middle" class="symbol-text">−</text>
+
+            {% set source = components|selectattr("type", "equalto", "V")|first %}
+            {% if source %}
+                <text x="74" y="166" text-anchor="middle" class="label-text">
+                    {{ source.name }}={{ source.value }}V
+                </text>
+            {% endif %}
+
+            {% set resistors = components|selectattr("type", "equalto", "R")|list %}
+            {% for resistor in resistors %}
+                {% set spacing = 520 / (resistors|length) %}
+                {% set center = 190 + spacing * (loop.index0 + 0.5) %}
+                {% set x0 = center - 40 %}
+                <rect x="{{ x0 - 2 }}" y="51" width="84" height="38" class="resistor-mask"/>
+                <path
+                    d="M {{ x0 }} 70
+                       L {{ x0 + 8 }} 70
+                       L {{ x0 + 15 }} 58
+                       L {{ x0 + 27 }} 82
+                       L {{ x0 + 39 }} 58
+                       L {{ x0 + 51 }} 82
+                       L {{ x0 + 63 }} 58
+                       L {{ x0 + 72 }} 70
+                       L {{ x0 + 80 }} 70"
+                    class="resistor-zigzag"
+                />
+                <text x="{{ center }}" y="42" text-anchor="middle" class="label-text">
+                    {{ resistor.name }}={{ resistor.value }}Ω
+                </text>
+            {% endfor %}
+
+            <path
+                d="M 450 134 A 36 36 0 1 1 414 170"
+                class="loop-arrow"
+                marker-end="url(#series-arrow)"
+            />
+            <text x="450" y="176" text-anchor="middle" class="loop-label">I</text>
+        </svg>
+
+    {% elif topology == "parallel" %}
+        <svg viewBox="0 0 900 350" class="circuit-svg" role="img" aria-label="Parallel circuit">
+            <line x1="140" y1="70" x2="760" y2="70" class="wire"/>
+            <line x1="140" y1="280" x2="760" y2="280" class="wire"/>
+            <line x1="140" y1="70" x2="140" y2="125" class="wire"/>
+            <line x1="140" y1="215" x2="140" y2="280" class="wire"/>
+
+            <circle cx="140" cy="170" r="32" class="source"/>
+            <text x="140" y="163" text-anchor="middle" class="symbol-text">+</text>
+            <text x="140" y="186" text-anchor="middle" class="symbol-text">−</text>
+
+            {% set source = components|selectattr("type", "equalto", "V")|first %}
+            {% if source %}
+                <text x="80" y="175" text-anchor="middle" class="label-text">
+                    {{ source.name }}={{ source.value }}V
+                </text>
+            {% endif %}
+
+            {% set resistors = components|selectattr("type", "equalto", "R")|list %}
+            {% for resistor in resistors %}
+                {% set spacing = 500 / (resistors|length + 1) %}
+                {% set x = 190 + spacing * loop.index %}
+                <line x1="{{ x }}" y1="70" x2="{{ x }}" y2="125" class="wire"/>
+                <rect x="{{ x - 25 }}" y="122" width="50" height="96" class="resistor-mask"/>
+                <path
+                    d="M {{ x }} 125
+                       L {{ x }} 135
+                       L {{ x - 12 }} 143
+                       L {{ x + 12 }} 155
+                       L {{ x - 12 }} 167
+                       L {{ x + 12 }} 179
+                       L {{ x - 12 }} 191
+                       L {{ x }} 201
+                       L {{ x }} 215"
+                    class="resistor-zigzag"
+                />
+                <line x1="{{ x }}" y1="215" x2="{{ x }}" y2="280" class="wire"/>
+                <text x="{{ x + 56 }}" y="174" text-anchor="middle" class="label-text">
+                    {{ resistor.name }}={{ resistor.value }}Ω
+                </text>
+            {% endfor %}
+        </svg>
+
+    {% elif topology == "mesh_two_loop" %}
+        <svg viewBox="0 0 900 360" class="circuit-svg" role="img" aria-label="Two-loop mesh circuit">
+            <defs>
+                <marker id="mesh-blue-arrow" markerWidth="6" markerHeight="6" refX="5.2" refY="3" orient="auto">
+                    <path d="M0,0 L6,3 L0,6 Z" class="blue-arrow-head"></path>
+                </marker>
+                <marker id="mesh-red-arrow" markerWidth="6" markerHeight="6" refX="5.2" refY="3" orient="auto">
+                    <path d="M0,0 L6,3 L0,6 Z" class="red-arrow-head"></path>
+                </marker>
+            </defs>
+
+            <line x1="130" y1="70" x2="770" y2="70" class="wire"/>
+            <line x1="130" y1="290" x2="770" y2="290" class="wire"/>
+
+            <rect x="244" y="51" width="96" height="38" class="resistor-mask"/>
+            <path d="M250 70 L258 70 L266 58 L278 82 L290 58 L302 82 L314 58 L326 70 L334 70" class="resistor-zigzag"/>
+            <text x="292" y="42" text-anchor="middle" class="label-text">R1={{ values.R1 }}Ω</text>
+
+            <rect x="558" y="51" width="96" height="38" class="resistor-mask"/>
+            <path d="M564 70 L572 70 L580 58 L592 82 L604 58 L616 82 L628 58 L640 70 L648 70" class="resistor-zigzag"/>
+            <text x="606" y="42" text-anchor="middle" class="label-text">R2={{ values.R2 }}Ω</text>
+
+            <line x1="450" y1="70" x2="450" y2="120" class="wire"/>
+            <rect x="425" y="117" width="50" height="116" class="resistor-mask"/>
+            <path d="M450 120 L450 130 L438 140 L462 153 L438 166 L462 179 L438 192 L450 204 L450 230" class="resistor-zigzag"/>
+            <line x1="450" y1="230" x2="450" y2="290" class="wire"/>
+            <text x="500" y="178" class="label-text">R3={{ values.R3 }}Ω</text>
+
+            <line x1="130" y1="70" x2="130" y2="125" class="wire"/>
+            <circle cx="130" cy="180" r="29" class="source"/>
+            <text x="130" y="173" text-anchor="middle" class="symbol-text">+</text>
+            <text x="130" y="196" text-anchor="middle" class="symbol-text">−</text>
+            <line x1="130" y1="209" x2="130" y2="290" class="wire"/>
+            <text x="72" y="185" text-anchor="middle" class="label-text">Vs1={{ values.Vs1 }}V</text>
+
+            <line x1="770" y1="70" x2="770" y2="125" class="wire"/>
+            <circle cx="770" cy="180" r="29" class="source"/>
+            <text x="770" y="173" text-anchor="middle" class="symbol-text">+</text>
+            <text x="770" y="196" text-anchor="middle" class="symbol-text">−</text>
+            <line x1="770" y1="209" x2="770" y2="290" class="wire"/>
+            <text x="828" y="185" text-anchor="middle" class="label-text">Vs2={{ values.Vs2 }}V</text>
+
+            <path
+                d="M 292 142 A 46 46 0 1 1 246 188"
+                class="mesh-loop-blue"
+                marker-end="url(#mesh-blue-arrow)"
+            />
+            <text x="292" y="195" text-anchor="middle" class="mesh-current-label blue-text">I₁</text>
+
+            <path
+                d="M 612 142 A 46 46 0 1 1 566 188"
+                class="mesh-loop-red"
+                marker-end="url(#mesh-red-arrow)"
+            />
+            <text x="612" y="195" text-anchor="middle" class="mesh-current-label red-text">I₂</text>
+        </svg>
+
+    {% elif topology == "nodal_one_node" %}
+        <svg viewBox="0 0 900 350" class="circuit-svg" role="img" aria-label="One-node circuit">
+            <circle cx="450" cy="110" r="8" class="node"/>
+            <text x="450" y="83" text-anchor="middle" class="node-label">V1</text>
+
+            <circle cx="120" cy="110" r="28" class="source"/>
+            <text x="120" y="103" text-anchor="middle" class="symbol-text">+</text>
+            <text x="120" y="126" text-anchor="middle" class="symbol-text">−</text>
+            <text x="120" y="160" text-anchor="middle" class="label-text">Vs={{ values.Vs }}V</text>
+
+            <line x1="148" y1="110" x2="245" y2="110" class="wire"/>
+            <rect x="242" y="91" width="100" height="38" class="resistor-mask"/>
+            <path d="M248 110 L258 110 L266 98 L278 122 L290 98 L302 122 L314 98 L326 110 L338 110" class="resistor-zigzag"/>
+            <line x1="338" y1="110" x2="442" y2="110" class="wire"/>
+            <text x="292" y="78" text-anchor="middle" class="label-text">R1={{ values.R1 }}Ω</text>
+
+            <line x1="450" y1="118" x2="450" y2="165" class="wire"/>
+            <rect x="425" y="162" width="50" height="106" class="resistor-mask"/>
+            <path d="M450 165 L450 175 L438 184 L462 197 L438 210 L462 223 L438 236 L450 247 L450 265" class="resistor-zigzag"/>
+            <line x1="450" y1="265" x2="450" y2="292" class="wire"/>
+            <text x="505" y="216" class="label-text">R2={{ values.R2 }}Ω</text>
+
+            <line x1="425" y1="292" x2="475" y2="292" class="wire"/>
+            <line x1="433" y1="302" x2="467" y2="302" class="wire"/>
+            <line x1="441" y1="312" x2="459" y2="312" class="wire"/>
+
+            <line x1="458" y1="110" x2="650" y2="110" class="wire"/>
+            <circle cx="690" cy="110" r="30" class="source"/>
+            <line x1="690" y1="130" x2="690" y2="91" class="current-arrow"/>
+            <polygon points="690,91 682,105 698,105" class="arrow-head"/>
+            <text x="690" y="160" text-anchor="middle" class="label-text">Is={{ values.Is }}A</text>
+        </svg>
+
+    {% elif topology == "nodal_two_node" %}
+        <svg viewBox="0 0 900 370" class="circuit-svg" role="img" aria-label="Two-node nodal circuit">
+            <circle cx="360" cy="105" r="8" class="node"/>
+            <circle cx="590" cy="105" r="8" class="node"/>
+            <text x="360" y="78" text-anchor="middle" class="node-label">V1</text>
+            <text x="590" y="78" text-anchor="middle" class="node-label">V2</text>
+
+            <circle cx="110" cy="105" r="28" class="source"/>
+            <text x="110" y="98" text-anchor="middle" class="symbol-text">+</text>
+            <text x="110" y="121" text-anchor="middle" class="symbol-text">−</text>
+            <text x="110" y="155" text-anchor="middle" class="label-text">Vs={{ values.Vs }}V</text>
+
+            <line x1="138" y1="105" x2="230" y2="105" class="wire"/>
+            <rect x="227" y="86" width="100" height="38" class="resistor-mask"/>
+            <path d="M233 105 L243 105 L251 93 L263 117 L275 93 L287 117 L299 93 L311 105 L323 105" class="resistor-zigzag"/>
+            <line x1="323" y1="105" x2="352" y2="105" class="wire"/>
+            <text x="278" y="72" text-anchor="middle" class="label-text">R1={{ values.R1 }}Ω</text>
+
+            <line x1="368" y1="105" x2="440" y2="105" class="wire"/>
+            <rect x="437" y="86" width="100" height="38" class="resistor-mask"/>
+            <path d="M443 105 L453 105 L461 93 L473 117 L485 93 L497 117 L509 93 L521 105 L533 105" class="resistor-zigzag"/>
+            <line x1="533" y1="105" x2="582" y2="105" class="wire"/>
+            <text x="488" y="72" text-anchor="middle" class="label-text">R3={{ values.R3 }}Ω</text>
+
+            <line x1="360" y1="113" x2="360" y2="170" class="wire"/>
+            <rect x="335" y="167" width="50" height="106" class="resistor-mask"/>
+            <path d="M360 170 L360 180 L348 189 L372 202 L348 215 L372 228 L348 241 L360 252 L360 270" class="resistor-zigzag"/>
+            <line x1="360" y1="270" x2="360" y2="300" class="wire"/>
+            <text x="410" y="220" class="label-text">R2={{ values.R2 }}Ω</text>
+
+            <line x1="590" y1="113" x2="590" y2="170" class="wire"/>
+            <rect x="565" y="167" width="50" height="106" class="resistor-mask"/>
+            <path d="M590 170 L590 180 L578 189 L602 202 L578 215 L602 228 L578 241 L590 252 L590 270" class="resistor-zigzag"/>
+            <line x1="590" y1="270" x2="590" y2="300" class="wire"/>
+            <text x="640" y="220" class="label-text">R4={{ values.R4 }}Ω</text>
+
+            <line x1="320" y1="300" x2="630" y2="300" class="wire"/>
+            <line x1="450" y1="300" x2="450" y2="315" class="wire"/>
+            <line x1="425" y1="315" x2="475" y2="315" class="wire"/>
+            <line x1="433" y1="325" x2="467" y2="325" class="wire"/>
+            <line x1="441" y1="335" x2="459" y2="335" class="wire"/>
+
+            <line x1="598" y1="105" x2="700" y2="105" class="wire"/>
+            <circle cx="740" cy="105" r="30" class="source"/>
+            <line x1="740" y1="125" x2="740" y2="86" class="current-arrow"/>
+            <polygon points="740,86 732,100 748,100" class="arrow-head"/>
+            <text x="740" y="155" text-anchor="middle" class="label-text">Is={{ values.Is }}A</text>
+        </svg>
+
+    {% elif topology == "elements" %}
+        <div class="empty-state">
+            Refer to the worked-example explanation for the element power diagram.
+        </div>
+
+    {% else %}
+        <div class="empty-state">
+            This question does not require a generated circuit diagram.
+        </div>
+    {% endif %}
+</div>

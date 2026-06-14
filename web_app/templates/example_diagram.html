@@ -1,0 +1,47 @@
+<div class="circuit-panel">
+    {% if example_topic == "mesh" %}
+        <svg viewBox="0 0 900 340" class="circuit-svg">
+            <defs>
+                <marker id="example-blue-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                    <path d="M0,0 L10,5 L0,10 Z" class="blue-arrow-head"></path>
+                </marker>
+                <marker id="example-red-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                    <path d="M0,0 L10,5 L0,10 Z" class="red-arrow-head"></path>
+                </marker>
+            </defs>
+
+            <line x1="150" y1="70" x2="750" y2="70" class="wire"/>
+            <line x1="150" y1="275" x2="750" y2="275" class="wire"/>
+            <line x1="450" y1="70" x2="450" y2="120" class="wire"/>
+            <rect x="425" y="117" width="50" height="110" class="resistor-mask"/>
+            <path d="M450 120 L450 130 L438 140 L462 153 L438 166 L462 179 L438 192 L450 204 L450 225" class="resistor-zigzag"/>
+            <line x1="450" y1="225" x2="450" y2="275" class="wire"/>
+            <text x="505" y="176" class="label-text">Shared resistor</text>
+
+            <path d="M285 112 C360 112 392 165 374 220 C355 268 278 277 229 233 C191 198 204 136 264 116" class="mesh-loop-blue" marker-end="url(#example-blue-arrow)"/>
+            <text x="292" y="180" text-anchor="middle" class="mesh-current-label blue-text">I1</text>
+            <text x="292" y="201" text-anchor="middle" class="mesh-direction-note">clockwise</text>
+
+            <path d="M605 112 C680 112 712 165 694 220 C675 268 598 277 549 233 C511 198 524 136 584 116" class="mesh-loop-red" marker-end="url(#example-red-arrow)"/>
+            <text x="612" y="180" text-anchor="middle" class="mesh-current-label red-text">I2</text>
+            <text x="612" y="201" text-anchor="middle" class="mesh-direction-note">clockwise</text>
+        </svg>
+    {% else %}
+        <svg viewBox="0 0 900 330" class="circuit-svg">
+            <circle cx="340" cy="100" r="8" class="node"/>
+            <circle cx="560" cy="100" r="8" class="node"/>
+            <text x="340" y="75" class="node-label">V1</text>
+            <text x="560" y="75" class="node-label">V2</text>
+            <line x1="348" y1="100" x2="420" y2="100" class="wire"/>
+            <circle cx="450" cy="100" r="28" class="source"/>
+            <text x="450" y="94" text-anchor="middle" class="symbol-text">12 V</text>
+            <line x1="478" y1="100" x2="552" y2="100" class="wire"/>
+            <line x1="340" y1="108" x2="340" y2="260" class="wire"/>
+            <line x1="560" y1="108" x2="560" y2="260" class="wire"/>
+            <line x1="300" y1="260" x2="600" y2="260" class="wire"/>
+            <text x="450" y="300" text-anchor="middle" class="label-text">
+                Supernode containing V1 and V2
+            </text>
+        </svg>
+    {% endif %}
+</div>

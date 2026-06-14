@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Competition Result{% endblock %}
+
+{% block content %}
+<section class="result-card card">
+    <p class="eyebrow">COMPETITION COMPLETE</p>
+    <h1>Grade {{ result.grade }}</h1>
+
+    <div class="result-grid">
+        <div><span>Student</span><strong>{{ result.name }}</strong></div>
+        <div><span>Score</span><strong>{{ result.score }}</strong></div>
+        <div><span>Correct</span><strong>{{ result.correct }}/{{ result.total }}</strong></div>
+        <div><span>Percentage</span><strong>{{ result.percentage }}%</strong></div>
+        <div><span>Time</span><strong>{{ result.time_seconds }} s</strong></div>
+    </div>
+
+    <div class="action-row centered">
+        <a class="button primary" href="{{ url_for('leaderboard') }}">
+            View Leaderboard
+        </a>
+        <a class="button" href="{{ url_for('competitive_student') }}">
+            New Competition
+        </a>
+    </div>
+</section>
+{% endblock %}

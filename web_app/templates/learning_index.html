@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Learning Modules{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+    <p class="eyebrow">GUIDED LEARNING</p>
+    <h1>Learning Modules</h1>
+    <p>Select a topic to view theory, worked examples and topic practice.</p>
+</section>
+
+<section class="topic-grid">
+    {% for key, topic in topics.items() %}
+        <a
+            class="topic-card"
+            href="{{ url_for('learning_topic', topic=key) }}"
+            style="--topic-accent: {{ topic.accent }}"
+        >
+            <span class="topic-badge">{{ topic.short }}</span>
+            <h2>{{ topic.title }}</h2>
+            <p>{{ topic.description }}</p>
+            <span class="card-link">Open module →</span>
+        </a>
+    {% endfor %}
+</section>
+{% endblock %}

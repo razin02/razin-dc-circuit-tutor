@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Circuit Analysis Tutor{% endblock %}</title>
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="{{ url_for('index') }}">
+            DC Circuit Analysis Tutor
+        </a>
+
+        <button
+            class="mobile-menu-button"
+            type="button"
+            aria-label="Open navigation"
+            onclick="document.body.classList.toggle('menu-open')"
+        >
+            ☰
+        </button>
+
+        <nav class="main-nav">
+            <a href="{{ url_for('learning_index') }}">Learning</a>
+            <a href="{{ url_for('tutor') }}">Tutor</a>
+            <a href="{{ url_for('competitive_role') }}">Competitive</a>
+            <a href="{{ url_for('builder') }}">Visual Builder</a>
+            <a href="{{ url_for('helper') }}">Helper</a>
+        </nav>
+    </header>
+
+    <main class="page">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        Web-Based Virtual Tutor for DC Circuit Analysis
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

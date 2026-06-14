@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Competition Question{% endblock %}
+
+{% block content %}
+<section class="toolbar card">
+    <div>
+        <p class="eyebrow">
+            {{ topic_meta.short }} • {{ state.problem.difficulty|upper }} • QUESTION {{ state.number }}/{{ state.total }}
+        </p>
+        <h1>{{ state.name }}</h1>
+    </div>
+
+    <div class="competition-stats">
+        <span>Score <strong>{{ state.score }}</strong></span>
+        <span>Correct <strong>{{ state.correct }}</strong></span>
+    </div>
+</section>
+
+<section class="card problem-card">
+    {% set problem = state.problem %}
+
+    <div class="problem-heading">
+        <div>
+            <span class="badge">{{ topic_meta.short }}</span>
+            <span class="badge secondary">{{ problem.difficulty|capitalize }}</span>
+        </div>
+        <span class="problem-number">Problem {{ problem.id }}</span>
+    </div>
+
+    <h2>{{ problem.description }}</h2>
+    <p class="question">{{ problem.question }}</p>
+
+    {% include "circuit_diagram.html" %}
+
+    <form method="post" class="answer-form" id="competition-answer-form">
+        <label for="answer">Answer</label>
+
+        <div class="answer-row">
+            <input id="answer" name="answer" type="number" step="any" autocomplete="off"
+                {% if not state.answered %}autofocus{% endif %}
+                {% if state.answered %}disabled{% endif %}>
+            <span class="unit">{{ problem.unit }}</span>
+
+            <button class="button primary" type="submit" name="action" value="check"
+                {% if state.answered %}disabled{% endif %}>
+                Submit Answer
+            </button>
+        </div>
+    </form>
+
+    {% if state.feedback %}
+        <div class="feedback {{ state.feedback_type }}">{{ state.feedback }}</div>
+    {% endif %}
+
+    {% if state.answered %}
+        <div class="auto-next-message">
+            {% if state.number >= state.total %}
+                Completing competition…
+            {% else %}
+                Loading the next question automatically…
+            {% endif %}
+        </div>
+
+        <form method="post" id="automatic-next-form">
+            <input type="hidden" name="action" value="next">
+            <noscript>
+                <button class="button" type="submit">Continue</button>
+            </noscript>
+        </form>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+{% if state.answered and state.auto_advance %}
+<script>
+window.setTimeout(() => {
+    const form = document.getElementById("automatic-next-form");
+    if (form) form.submit();
+}, 1400);
+</script>
+{% endif %}
+{% endblock %}

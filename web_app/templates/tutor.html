@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Tutor Mode{% endblock %}
+
+{% block content %}
+<section class="toolbar card">
+    <div>
+        <p class="eyebrow">RANDOM PRACTICE</p>
+        <h1>Tutor Mode</h1>
+    </div>
+
+    <form method="post" class="difficulty-form">
+        <input type="hidden" name="action" value="difficulty">
+        <label for="difficulty">Difficulty</label>
+        <select id="difficulty" name="difficulty" onchange="this.form.submit()">
+            {% for level in ["easy", "medium", "hard"] %}
+                <option
+                    value="{{ level }}"
+                    {% if difficulty == level %}selected{% endif %}
+                >
+                    {{ level|capitalize }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+</section>
+
+<section class="card problem-card">
+    <div class="problem-heading">
+        <div>
+            <span class="badge">
+                {{ problem.get("difficulty", difficulty)|capitalize }}
+            </span>
+            <span class="badge secondary">
+                {{ problem.get("circuit_def", {}).get("topology", "question")|replace("_", " ")|title }}
+            </span>
+        </div>
+        <span class="problem-number">Problem {{ problem.get("id", "") }}</span>
+    </div>
+
+    <h2>{{ problem.description }}</h2>
+    <p class="question">{{ problem.question }}</p>
+
+    {% if problem.get("display_type") == "pdf_page" %}
+        <div class="pdf-shell">
+            <iframe
+                title="Exam question"
+                src="{{ url_for('resource_file', kind='exam', filename=exam_filename) }}#page={{ exam_page }}"
+            ></iframe>
+        </div>
+    {% else %}
+        {% include "circuit_diagram.html" %}
+    {% endif %}
+
+    <form method="post" class="answer-form">
+        <label for="answer">Answer</label>
+        <div class="answer-row">
+            <input
+                id="answer"
+                name="answer"
+                type="number"
+                step="any"
+                autocomplete="off"
+                autofocus
+            >
+            <span class="unit">{{ problem.get("unit", "") }}</span>
+
+            <button class="button primary" type="submit" name="action" value="check">
+                Check Answer
+            </button>
+        </div>
+
+        <div class="action-row">
+            <button class="button" type="submit" name="action" value="hint">
+                Show Hint
+            </button>
+            <button class="button" type="submit" name="action" value="new">
+                Next Problem
+            </button>
+        </div>
+    </form>
+
+    {% if feedback %}
+        <div class="feedback {{ feedback_type }}">{{ feedback }}</div>
+    {% endif %}
+
+    {% if show_hint %}
+        <div class="hint">
+            <strong>Hint</strong>
+            <p>{{ problem.get("hint", "No hint is available.") }}</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

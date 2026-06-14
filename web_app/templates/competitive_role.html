@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Competitive Mode{% endblock %}
+
+{% block content %}
+<section class="role-card card">
+    <p class="eyebrow">COMPETITIVE MODE</p>
+    <h1>Choose User Role</h1>
+    <p>
+        Students compete for grades and leaderboard ranking.
+        Lecturers can manage saved results.
+    </p>
+
+    <div class="role-grid">
+        <a class="role-option student-role" href="{{ url_for('competitive_student') }}">
+            <span>🎓</span>
+            <h2>Student Mode</h2>
+            <p>Enter your name and answer 10 mixed circuit questions.</p>
+        </a>
+
+        <a class="role-option lecturer-role" href="{{ url_for('lecturer_login') }}">
+            <span>👨‍🏫</span>
+            <h2>Lecturer Mode</h2>
+            <p>Edit, delete and clear leaderboard records securely.</p>
+        </a>
+    </div>
+
+    <a class="button" href="{{ url_for('leaderboard') }}">
+        View Public Leaderboard
+    </a>
+</section>
+{% endblock %}

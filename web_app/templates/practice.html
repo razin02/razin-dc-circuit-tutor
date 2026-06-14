@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}{{ meta.short }} Practice{% endblock %}
+
+{% block content %}
+<section class="toolbar card">
+    <div>
+        <p class="eyebrow">{{ meta.short }} PRACTICE • {{ state.difficulty|upper }}</p>
+        <h1>Question {{ state.number }} of {{ state.total }}</h1>
+    </div>
+    <div class="score-display">Correct: {{ state.correct }}</div>
+</section>
+
+<section class="card problem-card">
+    {% set problem = state.problem %}
+    <div class="problem-heading">
+        <div>
+            <span class="badge">{{ meta.short }}</span>
+            <span class="badge secondary">{{ state.difficulty|capitalize }}</span>
+        </div>
+        <span class="problem-number">Problem {{ problem.id }}</span>
+    </div>
+
+    <h2>{{ problem.description }}</h2>
+    <p class="question">{{ problem.question }}</p>
+
+    {% include "circuit_diagram.html" %}
+
+    <form method="post" class="answer-form">
+        <label for="answer">Answer</label>
+        <div class="answer-row">
+            <input id="answer" name="answer" type="number" step="any" autocomplete="off"
+                {% if not state.answered %}autofocus{% endif %}
+                {% if state.answered %}disabled{% endif %}>
+            <span class="unit">{{ problem.unit }}</span>
+            <button class="button primary" type="submit" name="action" value="check"
+                {% if state.answered %}disabled{% endif %}>
+                Check Answer
+            </button>
+        </div>
+
+        <div class="action-row">
+            <button class="button" type="submit" name="action" value="hint">Show Detailed Hint</button>
+            <button class="button" type="submit" name="action" value="next">
+                {% if state.number >= state.total %}Finish Practice{% else %}Next Question{% endif %}
+            </button>
+        </div>
+    </form>
+
+    {% if state.feedback %}
+        <div class="feedback {{ state.feedback_type }}">{{ state.feedback }}</div>
+    {% endif %}
+
+    {% if show_hint %}
+        <div class="hint">
+            <strong>Detailed Hint</strong>
+            <p>{{ problem.hint }}</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

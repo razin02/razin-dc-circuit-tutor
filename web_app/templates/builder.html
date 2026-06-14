@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Visual Circuit Builder{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+    <p class="eyebrow">TRUE DRAG-AND-DROP WORKSPACE</p>
+    <h1>Visual Circuit Builder</h1>
+    <p>
+        Drag components from the palette onto the canvas, move them freely,
+        connect their terminals, edit their values and calculate the design.
+    </p>
+</section>
+
+<section class="builder-layout-v2">
+    <aside class="card builder-sidebar">
+        <h2>Component Palette</h2>
+        <p class="small-note">Drag a component directly onto the circuit canvas.</p>
+
+        <div class="palette-item source-item" draggable="true" data-component="source">
+            <span class="palette-symbol">◯</span>
+            Voltage Source
+        </div>
+
+        <div class="palette-item resistor-item" draggable="true" data-component="resistor">
+            <span class="palette-symbol">〰</span>
+            Resistor
+        </div>
+
+        <hr>
+
+        <label for="builder-topology">Calculation Topology</label>
+        <select id="builder-topology">
+            <option value="series">Series</option>
+            <option value="parallel">Parallel</option>
+        </select>
+
+        <div class="builder-mode-buttons">
+            <button class="button primary" id="select-mode" type="button">Select / Move</button>
+            <button class="button" id="connect-mode" type="button">Connect Terminals</button>
+        </div>
+
+        <div class="stacked-buttons">
+            <button class="button" id="auto-series" type="button">Auto-Wire Series</button>
+            <button class="button" id="auto-parallel" type="button">Auto-Wire Parallel</button>
+            <button class="button danger-outline" id="delete-selected" type="button">Delete Selected</button>
+            <button class="button primary" id="calculate-design" type="button">Calculate Design</button>
+            <button class="button" id="save-design" type="button">Save Design</button>
+            <button class="button" id="load-design" type="button">Load Design</button>
+            <button class="button danger" id="clear-design" type="button">Clear Workspace</button>
+        </div>
+    </aside>
+
+    <section class="builder-main-v2">
+        <div class="builder-status card">
+            <strong id="builder-mode-label">Mode: Select / Move</strong>
+            <span id="builder-instruction">
+                Drag components onto the canvas. Click a component to edit it.
+            </span>
+        </div>
+
+        <div class="card svg-workspace-card">
+            <svg
+                id="builder-svg"
+                viewBox="0 0 1000 600"
+                role="application"
+                aria-label="Circuit building workspace"
+            ></svg>
+        </div>
+
+        <div class="card component-inspector" id="component-inspector">
+            <div class="inspector-empty">
+                Select a component to edit its name, value or orientation.
+            </div>
+        </div>
+
+        <div class="card" id="builder-result">
+            <div class="empty-state">
+                Calculate the design to view electrical results.
+            </div>
+        </div>
+    </section>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='builder.js') }}"></script>
+{% endblock %}
