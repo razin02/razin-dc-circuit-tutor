@@ -57,4 +57,19 @@
         </div>
     {% endif %}
 </section>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const answer = document.getElementById("answer");
+    if (answer) {
+        answer.disabled = false;
+        answer.readOnly = false;
+        answer.focus();
+    }
+
+    const checkButton = document.querySelector('button[name="action"][value="check"]');
+    if (checkButton) {
+        checkButton.disabled = false;
+    }
+});
+</script>
 {% endblock %}
