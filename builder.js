@@ -76,42 +76,33 @@
     }
 
     function terminalPosition(component, terminal) {
-        const GRID = 80; // or your GRID value
-        const offset = GRID / 2;
+        const offset = GRID;
     
-        switch (component.type) {
-    
-            case "source":
-                return terminal === "a"
-                    ? { x: component.x, y: component.y - offset }
-                    : { x: component.x, y: component.y + offset };
-    
-            case "resistor":
-                return terminal === "a"
-                    ? { x: component.x - offset, y: component.y }
-                    : { x: component.x + offset, y: component.y };
-    
-            default:
-                return { x: component.x, y: component.y };
+        if (component.type === "source") {
+            return terminal === "a"
+                ? { x: component.x, y: component.y - offset }
+                : { x: component.x, y: component.y + offset };
         }
+    
+        if (component.type === "resistor") {
+            return terminal === "a"
+                ? { x: component.x - offset, y: component.y }
+                : { x: component.x + offset, y: component.y };
+        }
+    
+        return { x: component.x, y: component.y };
     }
 
     function wirePath(wire) {
-        x = Math.round(x / GRID) * GRID;
-        y = Math.round(y / GRID) * GRID;
         const firstComponent = componentById(wire.from.id);
         const secondComponent = componentById(wire.to.id);
     
         const start = terminalPosition(firstComponent, wire.from.terminal);
         const end = terminalPosition(secondComponent, wire.to.terminal);
     
-        const midX = start.x;
-        const midY = end.y;
-    
         return `
             M ${start.x} ${start.y}
-            L ${midX} ${start.y}
-            L ${midX} ${midY}
+            L ${start.x} ${end.y}
             L ${end.x} ${end.y}
         `;
     }
