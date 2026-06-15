@@ -68,6 +68,9 @@
             y: Math.round(clamp(y, 90, 510) / GRID) * GRID,
             orientation: type === "source" ? "vertical" : "horizontal"
         };
+        
+        component.x = Math.round(component.x / GRID) * GRID;
+        component.y = Math.round(component.y / GRID) * GRID;
 
         components.push(component);
         renumber();
@@ -94,11 +97,21 @@
     }
 
     function wirePath(wire) {
-        const firstComponent = componentById(wire.from.id);
-        const secondComponent = componentById(wire.to.id);
+        const a = componentById(wire.from.id);
+        const b = componentById(wire.to.id);
     
-        const start = terminalPosition(firstComponent, wire.from.terminal);
-        const end = terminalPosition(secondComponent, wire.to.terminal);
+        const start = terminalPosition(a, wire.from.terminal);
+        const end = terminalPosition(b, wire.to.terminal);
+    
+        // FORCE shared electrical node alignment
+        const isVerticalDrop = Math.abs(start.x - end.x) < GRID;
+    
+        if (isVerticalDrop) {
+            return `
+                M ${start.x} ${start.y}
+                L ${start.x} ${end.y}
+            `;
+        }
     
         return `
             M ${start.x} ${start.y}
