@@ -97,25 +97,24 @@
     }
 
     function wirePath(wire) {
+        x = Math.round(x / GRID) * GRID;
+        y = Math.round(y / GRID) * GRID;
         const firstComponent = componentById(wire.from.id);
         const secondComponent = componentById(wire.to.id);
     
-        if (!firstComponent || !secondComponent) return "";
+        const start = terminalPosition(firstComponent, wire.from.terminal);
+        const end = terminalPosition(secondComponent, wire.to.terminal);
     
-        const first = terminalPosition(firstComponent, wire.from.terminal);
-        const second = terminalPosition(secondComponent, wire.to.terminal);
-    
-        const midX = first.x;
-        const midY = second.y;
+        const midX = start.x;
+        const midY = end.y;
     
         return `
-            M ${first.x} ${first.y}
-            L ${midX} ${first.y}
-            L ${midX} ${second.y}
-            L ${second.x} ${second.y}
+            M ${start.x} ${start.y}
+            L ${midX} ${start.y}
+            L ${midX} ${midY}
+            L ${end.x} ${end.y}
         `;
     }
-
     function resistorMarkup(component) {
         if (component.orientation === "vertical") {
             return `
