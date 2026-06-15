@@ -76,16 +76,25 @@
     }
 
     function terminalPosition(component, terminal) {
-        if (component.type === "source" || component.orientation === "vertical") {
-        return terminal === "a"
-            ? { x: component.x, y: component.y - offset }
-            : { x: component.x, y: component.y + offset };
+        const GRID = 80; // or your GRID value
+        const offset = GRID / 2;
+    
+        switch (component.type) {
+    
+            case "source":
+                return terminal === "a"
+                    ? { x: component.x, y: component.y - offset }
+                    : { x: component.x, y: component.y + offset };
+    
+            case "resistor":
+                return terminal === "a"
+                    ? { x: component.x - offset, y: component.y }
+                    : { x: component.x + offset, y: component.y };
+    
+            default:
+                return { x: component.x, y: component.y };
+        }
     }
-
-    return terminal === "a"
-        ? { x: component.x - offset, y: component.y }
-        : { x: component.x + offset, y: component.y };
-}
 
     function wirePath(wire) {
         const firstComponent = componentById(wire.from.id);
