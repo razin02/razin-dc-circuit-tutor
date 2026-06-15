@@ -75,16 +75,18 @@
     }
 
     function terminalPosition(component, terminal) {
-        if (component.type === "source" || component.orientation === "vertical") {
-            return terminal === "a"
-                ? { x: component.x, y: component.y - 62 }
-                : { x: component.x, y: component.y + 62 };
-        }
+    const offset = 70; // make consistent spacing
 
+    if (component.type === "source" || component.orientation === "vertical") {
         return terminal === "a"
-            ? { x: component.x - 72, y: component.y }
-            : { x: component.x + 72, y: component.y };
+            ? { x: component.x, y: component.y - offset }
+            : { x: component.x, y: component.y + offset };
     }
+
+    return terminal === "a"
+        ? { x: component.x - offset, y: component.y }
+        : { x: component.x + offset, y: component.y };
+}
 
     function wirePath(wire) {
         const firstComponent = componentById(wire.from.id);
@@ -160,7 +162,7 @@
         return `
             <g class="builder-component-group${selectedClass}" data-component-id="${component.id}">
                 ${component.type === "source" ? sourceMarkup(component) : resistorMarkup(component)}
-                <text x="${component.x}" y="${component.y - 82}" text-anchor="middle" class="builder-component-label">
+                <text x="${component.x}" y="${component.y - 95}" text-anchor="middle" class="builder-component-label">
                     ${component.name}=${component.value}${component.type === "source" ? "V" : "Ω"}
                 </text>
                 <circle cx="${terminalA.x}" cy="${terminalA.y}" r="8"
