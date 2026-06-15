@@ -126,28 +126,32 @@
         }
 
         return `
-            <line x1="${component.x - 72}" y1="${component.y}" x2="${component.x - 42}" y2="${component.y}" class="component-lead"></line>
-            <path d="M ${component.x - 42} ${component.y}
-                     L ${component.x - 34} ${component.y}
-                     L ${component.x - 25} ${component.y - 14}
-                     L ${component.x - 12} ${component.y + 14}
-                     L ${component.x + 1} ${component.y - 14}
-                     L ${component.x + 14} ${component.y + 14}
-                     L ${component.x + 27} ${component.y - 14}
-                     L ${component.x + 38} ${component.y}
-                     L ${component.x + 42} ${component.y}"
+            <line x1="${component.x - GRID}" y1="${component.y}" x2="${component.x - GRID/2}" y2="${component.y}" class="component-lead"></line>
+        
+            <path d="M ${component.x - GRID/2} ${component.y}
+                     L ${component.x - 28} ${component.y}
+                     L ${component.x - 18} ${component.y - 14}
+                     L ${component.x - 6} ${component.y + 14}
+                     L ${component.x + 6} ${component.y - 14}
+                     L ${component.x + 18} ${component.y + 14}
+                     L ${component.x + 28} ${component.y - 14}
+                     L ${component.x + GRID/2} ${component.y}"
                   class="builder-resistor"></path>
-            <line x1="${component.x + 42}" y1="${component.y}" x2="${component.x + 72}" y2="${component.y}" class="component-lead"></line>
+        
+            <line x1="${component.x + GRID/2}" y1="${component.y}" x2="${component.x + GRID}" y2="${component.y}" class="component-lead"></line>
         `;
     }
 
     function sourceMarkup(component) {
         return `
-            <line x1="${component.x}" y1="${component.y - GRID}" x2="${component.x}" y2="${component.y - 34}" class="component-lead"></line>
-            <circle cx="${component.x}" cy="${component.y}" r="34" class="builder-source"></circle>
-            <text x="${component.x}" y="${component.y - 8}" text-anchor="middle" class="builder-polarity">+</text>
-            <text x="${component.x}" y="${component.y + 17}" text-anchor="middle" class="builder-polarity">−</text>
-            <line x1="${component.x}" y1="${component.y + 34}" x2="${component.x}" y2="${component.y + 62}" class="component-lead"></line>
+            <line x1="${component.x}" y1="${component.y - GRID}" x2="${component.x}" y2="${component.y - GRID/2}" class="component-lead"></line>
+    
+            <circle cx="${component.x}" cy="${component.y}" r="${GRID/2}" class="builder-source"></circle>
+    
+            <text x="${component.x}" y="${component.y - 10}" text-anchor="middle" class="builder-polarity">+</text>
+            <text x="${component.x}" y="${component.y + 18}" text-anchor="middle" class="builder-polarity">-</text>
+    
+            <line x1="${component.x}" y1="${component.y + GRID/2}" x2="${component.x}" y2="${component.y + GRID}" class="component-lead"></line>
         `;
     }
 
@@ -161,7 +165,7 @@
         return `
             <g class="builder-component-group${selectedClass}" data-component-id="${component.id}">
                 ${component.type === "source" ? sourceMarkup(component) : resistorMarkup(component)}
-                <text x="${component.x}" y="${component.y - GRID - 15}" text-anchor="middle" class="builder-component-label">
+                <text x="${component.x}" y="${component.y - GRID/2 - 10}" text-anchor="middle" class="builder-component-label">
                     ${component.name}=${component.value}${component.type === "source" ? "V" : "Ω"}
                 </text>
                 <circle cx="${terminalA.x}" cy="${terminalA.y}" r="8"
