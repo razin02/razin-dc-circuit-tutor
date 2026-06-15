@@ -79,7 +79,7 @@
     }
 
     function terminalPosition(component, terminal) {
-        const GRID = 60;
+        const offset = GRID;
     
         if (component.type === "source") {
             return terminal === "a"
@@ -97,6 +97,7 @@
     }
 
     function wirePath(wire) {
+        const EPS = 0.5;
         const a = componentById(wire.from.id);
         const b = componentById(wire.to.id);
     
@@ -114,7 +115,7 @@
         }
     
         return `
-            M ${start.x} ${start.y}
+            M ${start.x + EPS} ${start.y + EPS}
             L ${start.x} ${end.y}
             L ${end.x} ${end.y}
         `;
