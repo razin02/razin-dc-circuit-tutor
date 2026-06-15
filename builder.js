@@ -88,23 +88,18 @@
 }
 
     function wirePath(wire) {
-        const firstComponent = componentById(wire.from.id);
-        const secondComponent = componentById(wire.to.id);
-        if (!firstComponent || !secondComponent) return "";
-
-        const first = terminalPosition(firstComponent, wire.from.terminal);
-        const second = terminalPosition(secondComponent, wire.to.terminal);
-
-        const horizontalDifference = Math.abs(second.x - first.x);
-        const verticalDifference = Math.abs(second.y - first.y);
-
-        if (horizontalDifference >= verticalDifference) {
-            const middleX = (first.x + second.x) / 2;
-            return `M ${first.x} ${first.y} L ${middleX} ${first.y} L ${middleX} ${second.y} L ${second.x} ${second.y}`;
-        }
-
-        const middleY = (first.y + second.y) / 2;
-        return `M ${first.x} ${first.y} L ${first.x} ${middleY} L ${second.x} ${middleY} L ${second.x} ${second.y}`;
+        const first = terminalPosition(componentById(wire.from.id), wire.from.terminal);
+        const second = terminalPosition(componentById(wire.to.id), wire.to.terminal);
+    
+        const midX = first.x;
+        const midY = second.y;
+    
+        return `
+            M ${first.x} ${first.y}
+            L ${midX} ${first.y}
+            L ${midX} ${second.y}
+            L ${second.x} ${second.y}
+        `;
     }
 
     function resistorMarkup(component) {
