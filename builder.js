@@ -64,8 +64,8 @@
             type,
             name: type === "source" ? "V1" : "R1",
             value: type === "source" ? 12 : 10,
-            x: clamp(x, 90, 910),
-            y: clamp(y, 90, 510),
+            x: Math.round(clamp(x, 90, 910) / GRID) * GRID,
+            y: Math.round(clamp(y, 90, 510) / GRID) * GRID,
             orientation: type === "source" ? "vertical" : "horizontal"
         };
 
@@ -146,7 +146,7 @@
         return `
             <line x1="${component.x}" y1="${component.y - GRID}" x2="${component.x}" y2="${component.y - GRID/2}" class="component-lead"></line>
     
-            <circle cx="${component.x}" cy="${component.y}" r="${GRID/2}" class="builder-source"></circle>
+            <circle cx="${component.x}" cy="${component.y}" r="30" class="builder-source"></circle>
     
             <text x="${component.x}" y="${component.y - 10}" text-anchor="middle" class="builder-polarity">+</text>
             <text x="${component.x}" y="${component.y + 18}" text-anchor="middle" class="builder-polarity">-</text>
