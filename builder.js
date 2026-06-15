@@ -15,6 +15,7 @@
     let mode = "select";
     let dragState = null;
     let nextId = 1;
+    const GRID = 80;
 
     const clamp = (value, minimum, maximum) =>
         Math.max(minimum, Math.min(maximum, value));
@@ -75,9 +76,7 @@
     }
 
     function terminalPosition(component, terminal) {
-    const offset = 70; // make consistent spacing
-
-    if (component.type === "source" || component.orientation === "vertical") {
+        if (component.type === "source" || component.orientation === "vertical") {
         return terminal === "a"
             ? { x: component.x, y: component.y - offset }
             : { x: component.x, y: component.y + offset };
@@ -111,7 +110,7 @@
     function resistorMarkup(component) {
         if (component.orientation === "vertical") {
             return `
-                <line x1="${component.x}" y1="${component.y - 62}" x2="${component.x}" y2="${component.y - 42}" class="component-lead"></line>
+                <line x1="${component.x}" y1="${component.y - GRID}" x2="${component.x}" y2="${component.y - 42}" class="component-lead"></line>
                 <path d="M ${component.x} ${component.y - 42}
                          L ${component.x} ${component.y - 34}
                          L ${component.x - 14} ${component.y - 25}
@@ -144,7 +143,7 @@
 
     function sourceMarkup(component) {
         return `
-            <line x1="${component.x}" y1="${component.y - 62}" x2="${component.x}" y2="${component.y - 34}" class="component-lead"></line>
+            <line x1="${component.x}" y1="${component.y - GRID}" x2="${component.x}" y2="${component.y - 34}" class="component-lead"></line>
             <circle cx="${component.x}" cy="${component.y}" r="34" class="builder-source"></circle>
             <text x="${component.x}" y="${component.y - 8}" text-anchor="middle" class="builder-polarity">+</text>
             <text x="${component.x}" y="${component.y + 17}" text-anchor="middle" class="builder-polarity">−</text>
@@ -162,7 +161,7 @@
         return `
             <g class="builder-component-group${selectedClass}" data-component-id="${component.id}">
                 ${component.type === "source" ? sourceMarkup(component) : resistorMarkup(component)}
-                <text x="${component.x}" y="${component.y - 95}" text-anchor="middle" class="builder-component-label">
+                <text x="${component.x}" y="${component.y - GRID - 15}" text-anchor="middle" class="builder-component-label">
                     ${component.name}=${component.value}${component.type === "source" ? "V" : "Ω"}
                 </text>
                 <circle cx="${terminalA.x}" cy="${terminalA.y}" r="8"
