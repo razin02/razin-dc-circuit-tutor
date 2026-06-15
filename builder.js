@@ -79,7 +79,7 @@
     }
 
     function terminalPosition(component, terminal) {
-        const offset = GRID * 2;
+        const GRID = 60;
     
         if (component.type === "source") {
             return terminal === "a"
