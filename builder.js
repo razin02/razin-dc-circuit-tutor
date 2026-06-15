@@ -88,8 +88,8 @@
 }
 
     function wirePath(wire) {
-        const first = terminalPosition(componentById(wire.from.id), wire.from.terminal);
-        const second = terminalPosition(componentById(wire.to.id), wire.to.terminal);
+        const first = terminalPosition(firstComponent, wire.from.terminal);
+        const second = terminalPosition(secondComponent, wire.to.terminal);
     
         const midX = first.x;
         const midY = second.y;
