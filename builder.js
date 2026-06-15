@@ -5,6 +5,7 @@
     const topologySelect = document.getElementById("builder-topology");
     const modeLabel = document.getElementById("builder-mode-label");
     const instruction = document.getElementById("builder-instruction");
+    console.log("NEW BUILDER LOADED");
 
     if (!svg) return;
 
@@ -69,8 +70,7 @@
             orientation: type === "source" ? "vertical" : "horizontal"
         };
         
-        component.x = Math.round(component.x / GRID) * GRID;
-        component.y = Math.round(component.y / GRID) * GRID;
+
 
         components.push(component);
         renumber();
@@ -79,7 +79,7 @@
     }
 
     function terminalPosition(component, terminal) {
-        const offset = GRID;
+        const offset = GRID * 2;
     
         if (component.type === "source") {
             return terminal === "a"
@@ -517,6 +517,8 @@
         const point = svgPoint(event);
         component.x = clamp(point.x - dragState.offsetX, 85, 915);
         component.y = clamp(point.y - dragState.offsetY, 85, 515);
+        component.x = Math.round(component.x / GRID) * GRID;
+        component.y = Math.round(component.y / GRID) * GRID;
         renderCanvas();
     });
 
