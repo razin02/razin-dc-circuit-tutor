@@ -88,6 +88,7 @@
 }
 
     function wirePath(wire) {
+        console.log("WIRE RENDER ACTIVE");
         const first = terminalPosition(firstComponent, wire.from.terminal);
         const second = terminalPosition(secondComponent, wire.to.terminal);
     
